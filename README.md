@@ -29,7 +29,7 @@
 **2. 删除 appcompat-v7 Module 。**
 #####4. 完成导入 build apk。
 
-
+注：如果 clean 项目后发现还是不能正常运行，找到 Eclipse 下的 Problems 删除红色提示后就可正常运行。
 
 
 
