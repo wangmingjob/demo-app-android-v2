@@ -29,7 +29,7 @@
 **2. 删除 appcompat-v7 Module 。**
 #####4. 完成导入 build apk。
 
-<BR/><BR/><BR/>
+<BR/>
 ##融云 2.0升线文档
 
 ###1、删除项目中引入的 1.0 的 SDK
@@ -56,7 +56,7 @@
 2. “ 融云 SDK 2.0 ” 去掉了会话列表和会话页面的Activity依赖，Activity需要开发者自己来写。详细见 “ 融云 SDK 2.0 ”  集成文档地址：http://docs.rongcloud.cn/android.html
 
 
-<BR/><BR/>
+<BR/>
 #### 联系我们
 商务合作
 Email：<bd@rongcloud.cn>
