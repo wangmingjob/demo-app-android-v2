@@ -17,7 +17,7 @@
 操作步骤：在 Eclipse 中分别右击  RongDemo、RongIMKit、android-support-v7-appcompat 项目 在菜单中选择 Properties->java Compiler->compiler complinace level 选择 1.7 以上 JDK 版本。
  
 #####4. 完成导入 build apk。
-<font color="#0069d6">注：如果 clean 项目后发现还是不能正常运行，找到 Eclipse 下的 Problems 标签删除红色提示后方就正常运行。</font>
+注：如果 clean 项目后发现还是不能正常运行，找到 Eclipse 下的 Problems 标签删除红色提示后方就正常运行。
 
 
 ###Android studio 环境
@@ -32,7 +32,7 @@
 #####4. 完成导入 build apk。
 
 <BR/><BR/><BR/>
-##融云 2.0升线文档
+##融云 2.0 升线文档
 
 ###1、删除项目中引入的 1.0 的 SDK
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;需要删除的文件有：jar 包、so 文件、res 下以 rc 开头的 xml、图片、assets、以及 AndroidManifest 里面的配置文件。
