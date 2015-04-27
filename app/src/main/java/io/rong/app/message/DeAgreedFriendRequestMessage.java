@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 import io.rong.imlib.MessageTag;
-import io.rong.imlib.model.Message;
+import io.rong.imlib.model.MessageContent;
 import io.rong.imlib.model.UserInfo;
 import me.add1.common.ParcelUtils;
 
@@ -17,7 +17,7 @@ import me.add1.common.ParcelUtils;
  * Created by Bob on 2015/4/19.
  */
 @MessageTag(value = "RC:AgreeReq")
-public class DeAgreedFriendRequestMessage extends Message.MessageContent {
+public class DeAgreedFriendRequestMessage extends MessageContent {
 
     private String friendId;
     private String message;

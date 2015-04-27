@@ -1,1 +1,1 @@
-include ':kit',':app', ':appcompat-v7'
+include ':kit',':app'
