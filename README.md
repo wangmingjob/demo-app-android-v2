@@ -27,8 +27,8 @@
 打开 Android studio 选择 open an existing Android Studio project 导入项目。
 #####3. 删除引用
 为了更方便的 Eclipse 开发者我们引用了 appcompat-v7 包，Android studio 开发者需要做两步操作：<BR/>
-1. 删除 settings.gradle 中的 " appcompat-v7 "。 <BR/>
-2. 删除 appcompat-v7 Module 。
+ &nbsp;&nbsp;&nbsp;1. 删除 settings.gradle 中的 " appcompat-v7 "。 <BR/>
+ &nbsp;&nbsp;&nbsp;2. 删除 appcompat-v7 Module 。
 #####4. 完成导入 build apk。
 
 <BR/><BR/><BR/>
