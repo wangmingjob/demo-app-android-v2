@@ -189,14 +189,10 @@ public class DeGroupListFragment extends BaseFragment implements AdapterView.OnI
 
             Uri uri = Uri.parse("demo://" + getActivity().getApplicationInfo().packageName).buildUpon().appendPath("conversationSetting")
                     .appendPath(String.valueOf(Conversation.ConversationType.GROUP)).appendQueryParameter("targetId", mResultList.get(position).getId()).build();
-
             Intent intent = new Intent(getActivity(), DeGroupDetailActivity.class);
             intent.putExtra("INTENT_GROUP", mResultList.get(position));
-
             intent.setData(uri);
             startActivityForResult(intent, RESULTCODE);
-
-
         }
     }
 
@@ -215,7 +211,7 @@ public class DeGroupListFragment extends BaseFragment implements AdapterView.OnI
     }
 
     private void updateAdapter() {
-        Log.e("","------updateAdapter------");
+        Log.e("", "------updateAdapter------");
         if (mDemoGroupListAdapter != null) {
 //            Intent intent = getActivity().getIntent();
 //            Bundle bundle = intent.getExtras();

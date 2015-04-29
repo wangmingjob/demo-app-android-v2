@@ -366,15 +366,16 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
                 @Override
                 public void onSuccess(String userId) {
                     Log.e("LoginActivity", "---------onSuccess userId----------:" + userId);
+
+                    getUserInfoHttpRequest = DemoContext.getInstance().getDemoApi().getFriends(LoginActivity.this);
+
                     SharedPreferences.Editor edit = DemoContext.getInstance().getSharedPreferences().edit();
                     edit.putString("DEMO_USERID", userId);
                     edit.commit();
                     RongIM.getInstance().setUserInfoAttachedState(true);
                     RongIM.getInstance().setCurrentUserInfo(new UserInfo(userId, null, null));
-
                     RongCloudEvent.getInstance().setOtherListener();
-//                    mHandler.obtainMessage(HANDLER_LOGIN_SUCCESS).sendToTarget();
-                    getUserInfoHttpRequest = DemoContext.getInstance().getDemoApi().getFriends(LoginActivity.this);
+
                 }
 
                 @Override

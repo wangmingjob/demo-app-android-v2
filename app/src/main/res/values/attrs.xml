@@ -18,4 +18,6 @@
             <flag name="elasticity_adjust" value="2"></flag>
         </attr>
     </declare-styleable>
+
+
 </resources>
