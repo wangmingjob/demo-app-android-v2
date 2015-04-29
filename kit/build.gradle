@@ -38,8 +38,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:21.0.3'
     compile files('src/main/libs/Rong_IMKit_v2_0_1.jar')
-<<<<<<< HEAD
     compile files('src/main/libs/kit.jar')
-=======
->>>>>>> 980d64c907bb71a3801052cfeec3fa27285feb95
 }

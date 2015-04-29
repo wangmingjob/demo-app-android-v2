@@ -319,11 +319,6 @@ public final class RongCloudEvent implements RongIMClient.OnReceiveMessageListen
         return false;
     }
 
-    @Override
-    public boolean onConversationItemClick(Context context, UiConversation uiConversation) {
-        return false;
-    }
-
     /**
      * 连接状态监听器，以获取连接相关状态:ConnectionStatusListener 的回调方法，网络状态变化时执行。
      *
