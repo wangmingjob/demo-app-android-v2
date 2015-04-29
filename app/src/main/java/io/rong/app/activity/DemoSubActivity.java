@@ -11,6 +11,7 @@ import io.rong.imlib.model.Conversation;
 
 /**
  * Created by Bob on 2015/4/11.
+ * 聚合会话页面设置actionbar
  */
 public class DemoSubActivity extends DemoActivity {
 

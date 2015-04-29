@@ -17,6 +17,7 @@ import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Group;
 import io.rong.imlib.model.Message;
+import io.rong.imlib.model.MessageContent;
 import io.rong.imlib.model.UserInfo;
 import io.rong.message.ContactNotificationMessage;
 import io.rong.message.ImageMessage;
@@ -120,7 +121,7 @@ public final class RongCloudEvent implements RongIMClient.OnReceiveMessageListen
     @Override
     public boolean onReceived(Message message, int left) {
 
-        Message.MessageContent messageContent = message.getContent();
+        MessageContent messageContent = message.getContent();
 
         if (messageContent instanceof TextMessage) {//文本消息
             TextMessage textMessage = (TextMessage) messageContent;
@@ -192,7 +193,7 @@ public final class RongCloudEvent implements RongIMClient.OnReceiveMessageListen
     @Override
     public Message onSent(Message message) {
 
-        Message.MessageContent messageContent = message.getContent();
+        MessageContent messageContent = message.getContent();
 
         if (messageContent instanceof TextMessage) {//文本消息
             TextMessage textMessage = (TextMessage) messageContent;
@@ -315,6 +316,11 @@ public final class RongCloudEvent implements RongIMClient.OnReceiveMessageListen
 
     @Override
     public boolean onConversationLongClick(Context context,UiConversation conversation){
+        return false;
+    }
+
+    @Override
+    public boolean onConversationItemClick(Context context, UiConversation uiConversation) {
         return false;
     }
 

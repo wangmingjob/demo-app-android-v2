@@ -1,5 +1,6 @@
 package io.rong.app.activity;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -115,7 +116,7 @@ public class MainActivity extends BaseApiActivity implements View.OnClickListene
     //    private AbstractHttpRequest<Friends> getUserInfoHttpRequest;
     private AbstractHttpRequest<Friends> getFriendsHttpRequest;
     private int mNetNum = 0;
-
+    ActivityManager activityManager;
     @Override
     protected int setContentViewResId() {
         return R.layout.de_ac_main;
@@ -154,6 +155,7 @@ public class MainActivity extends BaseApiActivity implements View.OnClickListene
 
     @Override
     protected void initData() {
+         activityManager = (ActivityManager)this.getSystemService(ACTIVITY_SERVICE);
         mMainChatroomLiner.setOnClickListener(this);
         mMainConversationLiner.setOnClickListener(this);
         mMainGroupLiner.setOnClickListener(this);
@@ -495,7 +497,10 @@ public class MainActivity extends BaseApiActivity implements View.OnClickListene
             alterDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (RongIM.getInstance() != null) RongIM.getInstance().disconnect(true);
+                    if (RongIM.getInstance() != null)
+                        RongIM.getInstance().disconnect(true);
+
+                    killThisPackageIfRunning(MainActivity.this,"io.rong.imlib.ipc");
                     android.os.Process.killProcess(Process.myPid());
 
                 }
@@ -510,6 +515,10 @@ public class MainActivity extends BaseApiActivity implements View.OnClickListene
         }
 
         return false;
+    }
+    public static void killThisPackageIfRunning(final Context context, String packageName){
+        ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+        activityManager.killBackgroundProcesses(packageName);
     }
 
     @Override

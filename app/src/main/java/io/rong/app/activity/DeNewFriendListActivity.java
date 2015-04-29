@@ -124,6 +124,9 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
                     break;
                 case 3://请求被添加
                     mResultList.get(position).getId();
+                    if (mDialog != null && !mDialog.isShowing()) {
+                        mDialog.show();
+                    }
 
                     if (DemoContext.getInstance() != null)
                         runOnUiThread(new Runnable() {
@@ -150,6 +153,7 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
                                         }
 
                                         sendMessage(mResultList.get(position).getId());
+
 
                                     }
 
@@ -194,19 +198,24 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
     private void sendMessage(String id) {
         final DeAgreedFriendRequestMessage message = new DeAgreedFriendRequestMessage(id, "agree");
         if (DemoContext.getInstance() != null) {
-            UserInfo userInfo = DemoContext.getInstance().getUserInfoById(id);
+            String  userid = DemoContext.getInstance().getSharedPreferences().getString("DEMO_USERID","defalte");
+            UserInfo userInfo = DemoContext.getInstance().getUserInfoById(userid);
             message.setUserInfo(userInfo);
             if (RongIM.getInstance() != null) {
+
                 RongIM.getInstance().getRongClient().sendMessage(Conversation.ConversationType.PRIVATE, id, message, null, new RongIMClient.SendMessageCallback() {
                     @Override
                     public void onError(Integer messageId, RongIMClient.ErrorCode e) {
                         Log.e(TAG, DeConstants.DEBUG + "------DeAgreedFriendRequestMessage----onError--");
+                        if (mDialog != null)
+                            mDialog.dismiss();
                     }
 
                     @Override
                     public void onSuccess(Integer integer) {
                         Log.e(TAG, DeConstants.DEBUG + "------DeAgreedFriendRequestMessage----onSuccess--" + message.getMessage());
-
+                        if (mDialog != null)
+                            mDialog.dismiss();
                     }
                 });
             }
@@ -277,11 +286,8 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
                 mResultList = (List<ApiResult>) msg.obj;
                 updateAdapter(mResultList);
 
-
                 break;
         }
-
-
         return false;
     }
 

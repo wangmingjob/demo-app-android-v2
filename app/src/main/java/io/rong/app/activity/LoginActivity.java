@@ -371,9 +371,10 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
                     edit.commit();
                     RongIM.getInstance().setUserInfoAttachedState(true);
                     RongIM.getInstance().setCurrentUserInfo(new UserInfo(userId, null, null));
-                    mHandler.obtainMessage(HANDLER_LOGIN_SUCCESS).sendToTarget();
+
                     RongCloudEvent.getInstance().setOtherListener();
-//                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                    mHandler.obtainMessage(HANDLER_LOGIN_SUCCESS).sendToTarget();
+                    getUserInfoHttpRequest = DemoContext.getInstance().getDemoApi().getFriends(LoginActivity.this);
                 }
 
                 @Override
@@ -390,7 +391,7 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
         //发起获取好友列表的http请求  (注：非融云SDK接口，是demo接口)
         if (DemoContext.getInstance() != null) {
 
-            getUserInfoHttpRequest = DemoContext.getInstance().getDemoApi().getFriends(LoginActivity.this);
+//            getUserInfoHttpRequest = DemoContext.getInstance().getDemoApi().getFriends(LoginActivity.this);
 //                getFriendsHttpRequest = DemoContext.getInstance().getDemoApi().getNewFriendlist(LoginActivity.this);
             mGetMyGroupsRequest = DemoContext.getInstance().getDemoApi().getMyGroups(LoginActivity.this);
 
@@ -500,6 +501,8 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
                     if (DemoContext.getInstance() != null)
                         //将数据提供给用户信息提供者
                         DemoContext.getInstance().setUserInfos(friendreslut);
+
+                    mHandler.obtainMessage(HANDLER_LOGIN_SUCCESS).sendToTarget();
                 }
             }
         }

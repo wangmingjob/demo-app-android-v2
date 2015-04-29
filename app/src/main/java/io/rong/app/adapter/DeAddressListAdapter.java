@@ -55,7 +55,7 @@ public class DeAddressListAdapter extends DePinnedHeaderAdapter<Friend> implemen
             key = friend.getSearchKey();
 
             if (hashMap.containsKey(key)) {
-                Log.e("bob", "bob----hashMap.containsKey(key) == true---" + friend.getNickname() + "------" + key);
+//                Log.e("bob", "bob----hashMap.containsKey(key) == true---" + friend.getNickname() + "------" + key);
                 int position = (Integer) hashMap.get(key);
                 if (position <= result.size() - 1) {
                     result.get(position).add(friend);
@@ -65,7 +65,7 @@ public class DeAddressListAdapter extends DePinnedHeaderAdapter<Friend> implemen
 //
 //            }
             else {
-                Log.e("bob", "bob----hashMap.containsKey(key) == false---" + friend.getNickname() + "------" + key);
+//                Log.e("bob", "bob----hashMap.containsKey(key) == false---" + friend.getNickname() + "------" + key);
                 result.add(new ArrayList<Friend>());
                 int length = result.size() - 1;
                 result.get(length).add(friend);

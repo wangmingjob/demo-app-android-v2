@@ -30,7 +30,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />¬
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
     <application
         android:name=".App"
@@ -104,7 +105,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
                     android:host="io.rong.app"
-                    android:pathPrefix="/publicAccountInfo"
+                    android:pathPrefix="/publicServiceInfo"
                     android:scheme="rong" />
             </intent-filter>
         </activity>
@@ -152,7 +153,16 @@
                     android:pathPrefix="/conversation/"
                     android:scheme="rong" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="io.rong.app"
+                    android:pathPrefix="/conversationlist"
+                    android:scheme="rong" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -232,30 +242,62 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="io.rong.imkit.RongActivity"
-            android:screenOrientation="portrait"></activity>
+        <service
+            android:name="io.rong.push.PushService"
+            android:process="io.rong.push" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="io.rong.push" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="io.rong.push.CommandService"
+            android:process="io.rong.push" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="io.rong.command" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name="io.rong.push.PushReceiver"
+            android:process="io.rong.push" >
+            <intent-filter>
+                <action android:name="io.rong.imlib.action.push.heartbeat" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="io.rong.imlib.HeartbeatReceiver"
+            android:process=":ipc" />
 
         <activity
             android:name="io.rong.imkit.tools.SelectPictureActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name="io.rong.imkit.tools.PreviewPictureActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="io.rong.imkit.tools.RongWebviewActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="io.rong.imkit.widget.provider.TakingPicturesActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <service
             android:name="io.rong.imlib.ipc.RongService"
-            android:process=":ipc"></service>
+            android:process=":ipc" >
+        </service>
         <service android:name="io.rong.imlib.ReConnectService" />
 
-        <receiver android:name="io.rong.imlib.ipc.PushMessageReceiver">
+        <receiver android:name="io.rong.imlib.ipc.PushMessageReceiver" >
             <intent-filter>
                 <action android:name="io.rong.push.message" />
             </intent-filter>

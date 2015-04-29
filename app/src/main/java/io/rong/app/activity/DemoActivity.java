@@ -27,6 +27,7 @@ import io.rong.imlib.model.Discussion;
 
 /**
  * Created by Bob on 2015/3/27.
+ * 这个类的作用
  */
 public class DemoActivity extends BaseActivity {
 
@@ -134,9 +135,9 @@ public class DemoActivity extends BaseActivity {
             } else if (mConversationType.toString().equals("SYSTEM")) {
 
                 getSupportActionBar().setTitle("系统会话类型");
-            }else if(mConversationType.toString().equals("CHATROOM")){
+            } else if (mConversationType.toString().equals("CHATROOM")) {
                 getSupportActionBar().setTitle("聊天室");
-            }else if(mConversationType.toString().equals("CUSTOMER_SERVICE")){
+            } else if (mConversationType.toString().equals("CUSTOMER_SERVICE")) {
                 getSupportActionBar().setTitle("客服");
             }
 
@@ -146,7 +147,7 @@ public class DemoActivity extends BaseActivity {
     }
 
     /**
-     * set discussion name
+     * 设置讨论组名称
      *
      * @param targetIds
      */
@@ -187,7 +188,6 @@ public class DemoActivity extends BaseActivity {
             } else if (intent.getData().getLastPathSegment().equals("subconversationlist")) {
                 String fragmentName = SubConversationListFragment.class.getCanonicalName();
                 fragment = Fragment.instantiate(this, fragmentName);
-
             }
         }
 
@@ -227,20 +227,18 @@ public class DemoActivity extends BaseActivity {
                 if (mConversationType == Conversation.ConversationType.PUBLICSERVICE || mConversationType == Conversation.ConversationType.APPSERVICE) {
                     RongIM.getInstance().startPublicAccountInfo(this, mConversationType, targetId);
                 } else {
-
+                    //通过 targetId 与 会话类型打开设置页面
                     if (!TextUtils.isEmpty(targetId)) {
                         Uri uri = Uri.parse("demo://" + getApplicationInfo().packageName).buildUpon().appendPath("conversationSetting")
                                 .appendPath(mConversationType.getName()).appendQueryParameter("targetId", targetId).build();
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(uri);
                         startActivity(intent);
-                        Log.e(TAG, "00000000000----------targetId---uri.toString()--:" + uri.toString());
                     } else if (!TextUtils.isEmpty(targetIds)) {
-
+                        //刚刚创建完讨论组后，获得 targetIds，打开讨论组的设置页面
                         UriFragment fragment = (UriFragment) getSupportFragmentManager().getFragments().get(0);
                         fragment.getUri();
                         targetId = fragment.getUri().getQueryParameter("targetId");
-
 
                         if (!TextUtils.isEmpty(targetId)) {
                             Uri uri = Uri.parse("demo://" + getApplicationInfo().packageName).buildUpon().appendPath("conversationSetting")
@@ -248,22 +246,20 @@ public class DemoActivity extends BaseActivity {
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.setData(uri);
                             startActivity(intent);
-
                         } else {
                             WinToast.toast(DemoActivity.this, "讨论组尚未创建成功");
 
                         }
                     }
                 }
-                    break;
+                break;
 
-                    case android.R.id.home:
-                        finish();
-
-                        break;
-                }
-
-                return super.onOptionsItemSelected(item);
+            case android.R.id.home:
+                finish();
+                break;
         }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

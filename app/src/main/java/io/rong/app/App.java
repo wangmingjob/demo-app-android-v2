@@ -43,6 +43,7 @@ public class App extends Application {
 
         //友盟错误统计
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
+
     }
 
     /**

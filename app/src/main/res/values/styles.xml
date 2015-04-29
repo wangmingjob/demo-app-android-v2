@@ -46,7 +46,7 @@
         <item name="android:background">@drawable/rc_unread_count_bg</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@android:color/tab_indicator_text</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_width">18dp</item>

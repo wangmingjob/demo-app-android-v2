@@ -8,8 +8,8 @@
         android:orientation="vertical"
         android:background="@drawable/rc_bg_item"
         android:padding="5dp"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:layout_height="150dp"
             android:scaleType="fitXY"
             android:id="@id/rc_img"
-            android:src="@drawable/ic_launcher"/>
+            android:background="@drawable/ic_launcher"/>
 
         <TextView
             android:layout_width="fill_parent"
