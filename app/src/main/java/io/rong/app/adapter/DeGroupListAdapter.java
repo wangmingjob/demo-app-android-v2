@@ -81,7 +81,7 @@ public class DeGroupListAdapter extends BaseAdapter  {
             viewHolder.mSelectButton = (ImageView) convertView.findViewById(R.id.group_select);
             convertView.setTag(viewHolder);
         } else {
-            convertView.getTag();
+            viewHolder= (ViewHolder) convertView.getTag();
         }
         if (viewHolder != null) {
             viewHolder.mSelectButton.setOnClickListener(new View.OnClickListener() {

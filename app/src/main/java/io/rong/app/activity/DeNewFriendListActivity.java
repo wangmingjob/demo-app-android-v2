@@ -286,8 +286,11 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
                 mResultList = (List<ApiResult>) msg.obj;
                 updateAdapter(mResultList);
 
+
                 break;
         }
+
+
         return false;
     }
 

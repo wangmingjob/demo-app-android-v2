@@ -13,7 +13,7 @@ import io.rong.app.model.ApiResult;
 import io.rong.imkit.widget.AsyncImageView ;
 
 /**
- * Created by Administrator on 2015/3/26.
+ * Created by Bob on 2015/3/26.
  */
 public class DeSearchFriendAdapter extends android.widget.BaseAdapter {
     private Context mContext;
@@ -51,7 +51,7 @@ public class DeSearchFriendAdapter extends android.widget.BaseAdapter {
             viewHolder.mImageView = (AsyncImageView) convertView.findViewById(R.id.search_adapter_img);
             convertView.setTag(viewHolder);
         }else{
-            convertView.getTag();
+            viewHolder= (ViewHolder) convertView.getTag();
         }
 
         if(viewHolder != null) {
