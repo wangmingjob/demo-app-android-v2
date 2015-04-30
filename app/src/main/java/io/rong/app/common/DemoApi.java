@@ -141,7 +141,7 @@ public class DemoApi extends BaseApi {
 
     /**
      * demo server 获取好友
-     *
+     * 获取所有好友信息
      * @param callback
      * @return
      */
@@ -251,7 +251,7 @@ public class DemoApi extends BaseApi {
 
     /**
      * 获取好友列表
-     *
+     * 获取添加过的好友信息
      * @param callback
      * @return
      */

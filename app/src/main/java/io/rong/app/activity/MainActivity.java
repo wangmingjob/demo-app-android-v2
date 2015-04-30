@@ -371,6 +371,7 @@ public class MainActivity extends BaseApiActivity implements View.OnClickListene
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            //收到好友添加的邀请，需要更新 Actionbar
             if (action.equals(ACTION_DMEO_RECEIVE_MESSAGE)) {
                 hasNewFriends = intent.getBooleanExtra("has_message", false);
                 supportInvalidateOptionsMenu();

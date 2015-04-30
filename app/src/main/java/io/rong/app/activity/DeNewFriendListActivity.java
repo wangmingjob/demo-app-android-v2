@@ -62,15 +62,12 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
         mResultList = new ArrayList<>();
         mHandler = new Handler(this);
 
-
         if (DemoContext.getInstance() != null) {
             getFriendHttpRequest = DemoContext.getInstance().getDemoApi().getNewFriendlist(this);
             if (mDialog != null && !mDialog.isShowing()) {
                 mDialog.show();
             }
         }
-
-
         Intent in = new Intent();
         in.setAction(MainActivity.ACTION_DMEO_RECEIVE_MESSAGE);
         in.putExtra("has_message", false);
@@ -90,10 +87,8 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
 
             if (obj instanceof Friends) {
                 final Friends friends = (Friends) obj;
-                Log.e("", "------onCallApiSuccess-user.getCode()--" + friends.getCode());
                 if (friends.getCode() == 200) {
                     if (friends.getResult().size() != 0) {
-                        Log.e("", "------onCallApiSuccess-user.getCode() == 200)-----" + friends.getResult().get(0).getId().toString());
                         for (int i = 0; i < friends.getResult().size(); i++) {
                             mResultList.add(friends.getResult().get(i));
                         }
@@ -105,10 +100,7 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
                 }
             }
         } else if (mRequestFriendHttpRequest == request) {
-            Log.e("", "0415----- mRequestFriendHttpRequest):");
         }
-
-
     }
 
     DeNewFriendListAdapter.OnItemButtonClick mOnItemButtonClick = new DeNewFriendListAdapter.OnItemButtonClick() {
@@ -127,7 +119,6 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
                     if (mDialog != null && !mDialog.isShowing()) {
                         mDialog.show();
                     }
-
                     if (DemoContext.getInstance() != null)
                         runOnUiThread(new Runnable() {
                             @Override
@@ -151,10 +142,7 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
                                             mess.what = 1;
                                             mHandler.sendMessage(mess);
                                         }
-
                                         sendMessage(mResultList.get(position).getId());
-
-
                                     }
 
                                     @Override
@@ -164,7 +152,6 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
                                 });
                             }
                         });
-
 
                     break;
                 case 4://请求被拒绝
@@ -198,11 +185,14 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
     private void sendMessage(String id) {
         final DeAgreedFriendRequestMessage message = new DeAgreedFriendRequestMessage(id, "agree");
         if (DemoContext.getInstance() != null) {
-            String  userid = DemoContext.getInstance().getSharedPreferences().getString("DEMO_USERID","defalte");
+            //获取当前用户的 userid
+            String userid = DemoContext.getInstance().getSharedPreferences().getString("DEMO_USERID", "defalte");
             UserInfo userInfo = DemoContext.getInstance().getUserInfoById(userid);
+            //把用户信息设置到消息体中，直接发送给对方，可以不设置，非必选项
             message.setUserInfo(userInfo);
             if (RongIM.getInstance() != null) {
 
+                //发送一条添加成功的自定义消息，此条消息不会在ui上展示
                 RongIM.getInstance().getRongClient().sendMessage(Conversation.ConversationType.PRIVATE, id, message, null, new RongIMClient.SendMessageCallback() {
                     @Override
                     public void onError(Integer messageId, RongIMClient.ErrorCode e) {
@@ -226,7 +216,6 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
         if (adapter != null) {
             adapter = null;
         }
-
         adapter = new DeNewFriendListAdapter(mResultList, DeNewFriendListActivity.this);
         mNewFriendList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -282,21 +271,15 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case 1:
-                Log.e("", DeConstants.DEBUG + "0417--------handleMessage------+++");
                 mResultList = (List<ApiResult>) msg.obj;
                 updateAdapter(mResultList);
-
-
                 break;
         }
-
-
         return false;
     }
 
     @Override
     protected void onDestroy() {
-
         if (adapter != null) {
             adapter = null;
         }

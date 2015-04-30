@@ -146,13 +146,7 @@ public final class RongCloudEvent implements RongIMClient.OnReceiveMessageListen
             ContactNotificationMessage contactContentMessage = (ContactNotificationMessage) messageContent;
             Log.d(TAG, "onReceived-ContactNotificationMessage:getExtra;" + contactContentMessage.getExtra());
             Log.d(TAG, "onReceived-ContactNotificationMessage:+getmessage:" + contactContentMessage.getMessage().toString());
-//            RongIM.getInstance().getRongClient().deleteMessages(new int[]{message.getMessageId()});
-//            if(DemoContext.getInstance()!=null) {
-//                RongIM.getInstance().getRongClient().removeConversation(Conversation.ConversationType.SYSTEM, "10000");
-//                String targetname = DemoContext.getInstance().getUserNameByUserId(contactContentMessage.getSourceUserId());
-//                RongIM.getInstance().getRongClient().insertMessage(Conversation.ConversationType.SYSTEM, "10000", contactContentMessage.getSourceUserId(), contactContentMessage, null);
-//
-//            }
+            //收到从服务器端发过来的好友消息，发送广播提示更新ui
             Intent in = new Intent();
             in.setAction(MainActivity.ACTION_DMEO_RECEIVE_MESSAGE);
             in.putExtra("rongCloud", contactContentMessage);
@@ -167,6 +161,7 @@ public final class RongCloudEvent implements RongIMClient.OnReceiveMessageListen
     }
 
     /**
+     * 对方同意添加你为好友后，会向你发送添加成功的消息，这条消息是自定义消息，当前设置的这条消息不会在会话列表展示
      *
      * @param deAgreedFriendRequestMessage
      */
@@ -174,9 +169,12 @@ public final class RongCloudEvent implements RongIMClient.OnReceiveMessageListen
         ArrayList<UserInfo> friendreslist = new ArrayList<UserInfo>();
         if (DemoContext.getInstance() != null) {
             friendreslist = DemoContext.getInstance().getFriends();
+            //接收到的这条消息的消息体里面有 userinfo，直接调用就可以
             friendreslist.add(deAgreedFriendRequestMessage.getUserInfo());
+            //将此userinfo 添加到好友列表
             DemoContext.getInstance().setFriends(friendreslist);
         }
+        //发送广播，提示更新 UI
         Intent in = new Intent();
         in.setAction(MainActivity.ACTION_DMEO_AGREE_REQUEST);
         in.putExtra("AGREE_REQUEST", true);
