@@ -77,20 +77,17 @@
     <string name="rc_notice_input_conversation_error">会话尚未创建</string>
     <string name="rc_message_unknow">当前版本暂不支持查看此消息</string>
 
-
-    <string name="rc_notification_send">发来了</string>
-    <string name="rc_notification_msg">条消息</string>
-    <string name="rc_notification_contact">个联系人</string>
-    <string name="rc_notification_ticker_text">您有了一条新消息</string>
-
     <string name="rc_name">融云</string>
     <string name="rc_voice_dialog_collect">手指上滑，取消发送</string>
     <string name="rc_voice_dialog_cancel_send">松开手指，取消发送</string>
     <string name="rc_voice_dialog_time_short">说话时间太短</string>
 
-
     <string name="rc_plugins_voip">语音通话</string>
 
+    <string name="rc_notification_send">发来了</string>
+    <string name="rc_notification_msg">条消息</string>
+    <string name="rc_notification_contact">个联系人</string>
+    <string name="rc_notification_ticker_text">您有了一条新消息</string>
 </resources>
 
 

@@ -2,6 +2,8 @@ package io.rong.app.activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -11,9 +13,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.List;
+
 import io.rong.app.DemoContext;
 import io.rong.app.R;
 import io.rong.app.fragment.DeFriendMultiChoiceFragment;
+import io.rong.app.ui.LoadingDialog;
 import io.rong.app.ui.WinToast;
 import io.rong.imkit.RongIM;
 import io.rong.imkit.common.RongConst;
@@ -27,16 +32,31 @@ import io.rong.imlib.model.Discussion;
 
 /**
  * Created by Bob on 2015/3/27.
- * 这个类的作用
+ * 通过intent获得发送过来的数据
+ * 1，程序切到后台，点击通知栏进入程序
+ * 2，收到 push 消息
  */
-public class DemoActivity extends BaseActivity {
+public class DemoActivity extends BaseActivity implements Handler.Callback {
 
     private static final String TAG = DemoActivity.class.getSimpleName();
+    /**
+     * 对方id
+     */
     private String targetId;
+    /**
+     * 刚刚创建完讨论组后获得讨论组的targetIds
+     */
     private String targetIds;
+    /**
+     * 讨论组id
+     */
     private String mDiscussionId;
+    /**
+     * 会话类型
+     */
     private Conversation.ConversationType mConversationType;
-    private boolean isSubList = false;
+    private LoadingDialog mDialog;
+    private Handler mHandler;
 
     @Override
     protected int setContentViewResId() {
@@ -45,11 +65,88 @@ public class DemoActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.de_actionbar_back);
-
+        mHandler = new Handler(this);
         Intent intent = getIntent();
+        //push或通知过来
+        if (intent != null && intent.getData() != null && intent.getData().getScheme().equals("rong") && intent.getData().getQueryParameter("push") != null) {
+            //通过intent.getData().getQueryParameter("push") 为true，判断是否是push消息
+            if (DemoContext.getInstance() != null && intent.getData().getQueryParameter("push").equals("true")) {
+                if(DemoContext.getInstance()!=null) {
+                    String token = DemoContext.getInstance().getSharedPreferences().getString("DEMO_TOKEN", "defult");
+                    reconnect(token);
+                }
+            } else {
+                enterFragment(intent);
+            }
+        } else if (intent != null) {
+            //程序切到后台，收到消息后点击进入,会执行这里
+            enterFragment(intent);
+        }
+    }
 
+    /**
+     * 收到push消息后做重连，重新连接融云
+     *
+     * @param token
+     */
+    private void reconnect(String token) {
+
+        mDialog = new LoadingDialog(this);
+        mDialog.setCancelable(false);
+        mDialog.setText("connect_auto_reconnect");
+        mDialog.show();
+
+        try {
+            RongIM.connect(token, new RongIMClient.ConnectCallback() {
+                @Override
+                public void onSuccess(String userId) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDialog.dismiss();
+                            WinToast.toast(DemoActivity.this, "connect_auto_success");
+                            Intent intent = getIntent();
+                            if (intent != null) {
+                                enterFragment(intent);
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(RongIMClient.ErrorCode e) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDialog.dismiss();
+                            WinToast.toast(DemoActivity.this, "connect_auto_fail_error");
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mDialog.dismiss();
+                    WinToast.toast(DemoActivity.this, "connect_auto_fail_e");
+                }
+            });
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 消息分发，选择跳转到哪个fragment
+     *
+     * @param intent
+     */
+    private void enterFragment(Intent intent) {
+        String tag = null;
         if (intent != null) {
             Fragment fragment = null;
 
@@ -58,23 +155,30 @@ public class DemoActivity extends BaseActivity {
                 fragment = Fragment.instantiate(this, fragmentName);
             } else if (intent.getData() != null) {
                 if (intent.getData().getPathSegments().get(0).equals("conversation")) {
+                    tag = "conversation";
                     if (intent.getData().getLastPathSegment().equals("system")) {
 //                        String fragmentName = MessageListFragment.class.getCanonicalName();
 //                        fragment = Fragment.instantiate(this, fragmentName);
                         startActivity(new Intent(DemoActivity.this, DeNewFriendListActivity.class));
                         finish();
+                        List<Conversation> conversations = RongIM.getInstance().getRongClient().getConversationList(Conversation.ConversationType.SYSTEM);
+                        for (int i = 0; i < conversations.size(); i++) {
+                            RongIM.getInstance().getRongClient().clearMessagesUnreadStatus(Conversation.ConversationType.SYSTEM, conversations.get(i).getSenderUserId());
+                        }
                     } else {
                         String fragmentName = ConversationFragment.class.getCanonicalName();
                         fragment = Fragment.instantiate(this, fragmentName);
                     }
                 } else if (intent.getData().getLastPathSegment().equals("conversationlist")) {
+                    tag = "conversationlist";
                     String fragmentName = ConversationListFragment.class.getCanonicalName();
                     fragment = Fragment.instantiate(this, fragmentName);
                 } else if (intent.getData().getLastPathSegment().equals("subconversationlist")) {
+                    tag = "subconversationlist";
                     String fragmentName = SubConversationListFragment.class.getCanonicalName();
                     fragment = Fragment.instantiate(this, fragmentName);
-                    isSubList = true;
                 } else if (intent.getData().getPathSegments().get(0).equals("friend")) {
+                    tag = "friend";
                     String fragmentName = DeFriendMultiChoiceFragment.class.getCanonicalName();
                     fragment = Fragment.instantiate(this, fragmentName);
                     ActionBar actionBar = getSupportActionBar();
@@ -89,16 +193,16 @@ public class DemoActivity extends BaseActivity {
                 } else if (targetIds != null)
                     mConversationType = Conversation.ConversationType.valueOf(intent.getData().getLastPathSegment().toUpperCase());
 //                    mConversationType = Conversation.ConversationType.valueOf(intent.getData().getQueryParameter("type").toUpperCase());
-
                 Log.e(TAG, "----demoacitivity  targetId----:" + targetId + ",targetIds----" + targetIds + ",mConversationType--" + mConversationType + ",mDiscussionId---" + mDiscussionId);
             }
 
             if (fragment != null) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.add(R.id.de_content, fragment);
+                transaction.add(R.id.de_content, fragment, tag);
                 transaction.addToBackStack(null).commitAllowingStateLoss();
             }
         }
+
     }
 
 
@@ -147,7 +251,7 @@ public class DemoActivity extends BaseActivity {
     }
 
     /**
-     * 设置讨论组名称
+     * set discussion name
      *
      * @param targetIds
      */
@@ -173,27 +277,36 @@ public class DemoActivity extends BaseActivity {
 
         setIntent(intent);
 
+        String tag = null;
         Fragment fragment = null;
 
         if (intent.getExtras() != null && intent.getExtras().containsKey(RongConst.EXTRA.CONTENT)) {
             String fragmentName = intent.getExtras().getString(RongConst.EXTRA.CONTENT);
             fragment = Fragment.instantiate(this, fragmentName);
         } else if (intent.getData() != null) {
+
             if (intent.getData().getPathSegments().get(0).equals("conversation")) {
+                tag = "conversation";
+                fragment = getSupportFragmentManager().findFragmentByTag(tag);
+                if (fragment != null)
+                    return;
                 String fragmentName = ConversationFragment.class.getCanonicalName();
                 fragment = Fragment.instantiate(this, fragmentName);
             } else if (intent.getData().getLastPathSegment().equals("conversationlist")) {
+                tag = "conversationlist";
                 String fragmentName = ConversationListFragment.class.getCanonicalName();
                 fragment = Fragment.instantiate(this, fragmentName);
             } else if (intent.getData().getLastPathSegment().equals("subconversationlist")) {
+                tag = "subconversationlist";
                 String fragmentName = SubConversationListFragment.class.getCanonicalName();
                 fragment = Fragment.instantiate(this, fragmentName);
+
             }
         }
 
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.de_content, fragment);
+            transaction.replace(R.id.de_content, fragment, tag);
             transaction.addToBackStack(null).commitAllowingStateLoss();
         }
     }
@@ -227,18 +340,20 @@ public class DemoActivity extends BaseActivity {
                 if (mConversationType == Conversation.ConversationType.PUBLICSERVICE || mConversationType == Conversation.ConversationType.APPSERVICE) {
                     RongIM.getInstance().startPublicAccountInfo(this, mConversationType, targetId);
                 } else {
-                    //通过 targetId 与 会话类型打开设置页面
+
                     if (!TextUtils.isEmpty(targetId)) {
                         Uri uri = Uri.parse("demo://" + getApplicationInfo().packageName).buildUpon().appendPath("conversationSetting")
                                 .appendPath(mConversationType.getName()).appendQueryParameter("targetId", targetId).build();
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(uri);
                         startActivity(intent);
+                        Log.e(TAG, "00000000000----------targetId---uri.toString()--:" + uri.toString());
                     } else if (!TextUtils.isEmpty(targetIds)) {
-                        //刚刚创建完讨论组后，获得 targetIds，打开讨论组的设置页面
+
                         UriFragment fragment = (UriFragment) getSupportFragmentManager().getFragments().get(0);
                         fragment.getUri();
                         targetId = fragment.getUri().getQueryParameter("targetId");
+
 
                         if (!TextUtils.isEmpty(targetId)) {
                             Uri uri = Uri.parse("demo://" + getApplicationInfo().packageName).buildUpon().appendPath("conversationSetting")
@@ -246,6 +361,7 @@ public class DemoActivity extends BaseActivity {
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.setData(uri);
                             startActivity(intent);
+
                         } else {
                             WinToast.toast(DemoActivity.this, "讨论组尚未创建成功");
 
@@ -256,10 +372,15 @@ public class DemoActivity extends BaseActivity {
 
             case android.R.id.home:
                 finish();
+
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean handleMessage(Message msg) {
+        return false;
+    }
 }

@@ -176,7 +176,7 @@ public class MainActivity extends BaseApiActivity implements View.OnClickListene
         }
 
         final Conversation.ConversationType[] conversationTypes = {Conversation.ConversationType.PRIVATE, Conversation.ConversationType.DISCUSSION,
-                Conversation.ConversationType.GROUP, Conversation.ConversationType.SYSTEM, Conversation.ConversationType.CHATROOM,
+                Conversation.ConversationType.GROUP, Conversation.ConversationType.SYSTEM,
                 Conversation.ConversationType.PUBLICSERVICE, Conversation.ConversationType.APPSERVICE};
 
         Handler handler = new Handler();
@@ -268,8 +268,8 @@ public class MainActivity extends BaseApiActivity implements View.OnClickListene
                                 .appendPath("conversationlist")
                                 .appendQueryParameter(Conversation.ConversationType.PRIVATE.getName(), "false") //设置私聊会话是否聚合显示
                                 .appendQueryParameter(Conversation.ConversationType.GROUP.getName(), "true")
-                                .appendQueryParameter(Conversation.ConversationType.DISCUSSION.getName(), "false") //设置私聊会话是否聚合显示
-                                .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "false") //设置私聊会话是否聚合显示
+                                .appendQueryParameter(Conversation.ConversationType.DISCUSSION.getName(), "false")
+                                .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "true")
                                 .appendQueryParameter(Conversation.ConversationType.PUBLICSERVICE.getName(), "false")
                                 .appendQueryParameter(Conversation.ConversationType.APPSERVICE.getName(), "false")
                                 .build();
@@ -426,7 +426,6 @@ public class MainActivity extends BaseApiActivity implements View.OnClickListene
                 if (RongIM.getInstance() != null) {
                     RongIM.getInstance().startSubConversationList(this, Conversation.ConversationType.GROUP);
                 }
-
                 break;
             case R.id.add_item3://通讯录
                 startActivity(new Intent(MainActivity.this, DeAdressListActivity.class));
@@ -460,8 +459,9 @@ public class MainActivity extends BaseApiActivity implements View.OnClickListene
                 final Friends friends = (Friends) obj;
                 if (friends.getCode() == 200) {
                     ArrayList<UserInfo> friendreslut = new ArrayList<UserInfo>();
-
+                    //status : 1 好友, 2 请求添加, 3 请求被添加, 4 请求被拒绝, 5 我被对方删除
                     for (int i = 0; i < friends.getResult().size(); i++) {
+                        //此处定义的好友为：1 好友，3 请求被添加, 5 我被对方删除
                         if (friends.getResult().get(i).getStatus() == 1 || friends.getResult().get(i).getStatus() == 3 || friends.getResult().get(i).getStatus() == 5) {
                             UserInfo info = new UserInfo(String.valueOf(friends.getResult().get(i).getId()), friends.getResult().get(i).getUsername(), friends.getResult().get(i).getPortrait() == null ? null : Uri.parse(friends.getResult().get(i).getPortrait()));
                             friendreslut.add(info);

@@ -18,6 +18,7 @@ import io.rong.app.R;
 import io.rong.app.fragment.DeGroupListFragment;
 import io.rong.app.model.ApiResult;
 import io.rong.app.model.Status;
+import io.rong.app.ui.LoadingDialog;
 import io.rong.app.ui.WinToast;
 import io.rong.app.utils.DeConstants;
 import io.rong.imkit.RongIM;
@@ -56,7 +57,7 @@ public class DeGroupDetailActivity extends BaseApiActivity implements View.OnCli
     private String targetIds;
     private Handler mHandler;
     private Conversation.ConversationType mConversationType;
-
+    private LoadingDialog mDialog;
 
     @Override
     protected int setContentViewResId() {
@@ -69,6 +70,7 @@ public class DeGroupDetailActivity extends BaseApiActivity implements View.OnCli
         getSupportActionBar().setTitle(R.string.personal_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.de_actionbar_back);
+        mDialog = new LoadingDialog(this);
         Intent intent = getIntent();
         if (intent.getData() != null) {
             targetId = intent.getData().getQueryParameter("targetId");
@@ -132,11 +134,15 @@ public class DeGroupDetailActivity extends BaseApiActivity implements View.OnCli
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case HAS_JOIN:
+                if (mDialog != null)
+                    mDialog.dismiss();
                 mGroupJoin.setVisibility(View.GONE);
                 mGroupChat.setVisibility(View.VISIBLE);
                 mGroupQuit.setVisibility(View.VISIBLE);
                 break;
             case NO_JOIN:
+                if (mDialog != null)
+                    mDialog.dismiss();
                 mGroupQuit.setVisibility(View.GONE);
                 mGroupJoin.setVisibility(View.VISIBLE);
                 mGroupChat.setVisibility(View.GONE);
@@ -151,12 +157,16 @@ public class DeGroupDetailActivity extends BaseApiActivity implements View.OnCli
         switch (v.getId()) {
             case R.id.join_group:
                 if (DemoContext.getInstance() != null) {
+                    if (mDialog != null && !mDialog.isShowing())
+                        mDialog.show();
                     mJoinRequest = DemoContext.getInstance().getDemoApi().joinGroup(mApiResult.getId(), this);
 
                 }
                 break;
             case R.id.quit_group:
                 if (DemoContext.getInstance() != null) {
+                    if (mDialog != null && !mDialog.isShowing())
+                        mDialog.show();
                     mQuitRequest = DemoContext.getInstance().getDemoApi().quitGroup(mApiResult.getId(), this);
                 }
 

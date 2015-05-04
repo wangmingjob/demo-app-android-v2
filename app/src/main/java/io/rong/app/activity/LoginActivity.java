@@ -447,6 +447,9 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
                 final User user = (User) obj;
                 if (user.getCode() == 200) {
                     httpGetTokenSuccess(user.getResult().getToken());
+                    SharedPreferences.Editor edit = DemoContext.getInstance().getSharedPreferences().edit();
+                    edit.putString("DEMO_TOKEN", user.getResult().getToken());
+                    edit.commit();
                     Log.e(TAG, "------getTokenHttpRequest -success--" + user.getResult().getToken());
                 } else if (user.getCode() == 110) {
                     WinToast.toast(LoginActivity.this, user.getMessage());

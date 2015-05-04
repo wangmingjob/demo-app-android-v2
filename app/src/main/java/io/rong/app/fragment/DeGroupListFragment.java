@@ -22,6 +22,7 @@ import io.rong.app.adapter.DeGroupListAdapter;
 import io.rong.app.model.ApiResult;
 import io.rong.app.model.Groups;
 import io.rong.app.model.Status;
+import io.rong.app.ui.LoadingDialog;
 import io.rong.app.ui.WinToast;
 import io.rong.app.utils.DeConstants;
 import io.rong.imkit.RongIM;
@@ -46,13 +47,14 @@ public class DeGroupListFragment extends BaseFragment implements AdapterView.OnI
     private HashMap<String, Group> mGroupMap;
     private ApiResult result;
     private Handler mHandler;
+    private LoadingDialog mDialog;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.de_fr_group_list, null);
         mGroupListView = (ListView) view.findViewById(R.id.de_group_list);
         mGroupListView.setItemsCanFocus(false);
-
+        mDialog = new LoadingDialog(getActivity());
         initData();
         return view;
     }
@@ -103,6 +105,9 @@ public class DeGroupListFragment extends BaseFragment implements AdapterView.OnI
                             } else {
 
                                 if (DemoContext.getInstance() != null) {
+                                    if (mDialog != null && !mDialog.isShowing())
+                                        mDialog.show();
+
                                     mUserRequest = DemoContext.getInstance().getDemoApi().joinGroup(result.getId(), DeGroupListFragment.this);
                                 }
 
@@ -128,7 +133,8 @@ public class DeGroupListFragment extends BaseFragment implements AdapterView.OnI
                 RongIM.getInstance().getRongClient().joinGroup(result.getId(), result.getName(), new RongIMClient.OperationCallback() {
                     @Override
                     public void onSuccess() {
-                        Log.e("", "04088==========================================-");
+                        if (mDialog != null)
+                            mDialog.dismiss();
                         RongIM.getInstance().startGroupChat(getActivity(), result.getId(), result.getName());
                     }
 
@@ -170,7 +176,10 @@ public class DeGroupListFragment extends BaseFragment implements AdapterView.OnI
     @Override
     public void onCallApiFailure(AbstractHttpRequest request, BaseException e) {
         Log.e(TAG, "-----------获取群组列表失败 ----");
-
+        if (mUserRequest == request){
+            if (mDialog != null)
+                mDialog.dismiss();
+        }
 
     }
 
@@ -185,14 +194,18 @@ public class DeGroupListFragment extends BaseFragment implements AdapterView.OnI
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mResultList != null && position != -1 && position < mResultList.size()) {
+        if (mResultList != null&& position != -1 && position < mResultList.size() ) {
 
             Uri uri = Uri.parse("demo://" + getActivity().getApplicationInfo().packageName).buildUpon().appendPath("conversationSetting")
                     .appendPath(String.valueOf(Conversation.ConversationType.GROUP)).appendQueryParameter("targetId", mResultList.get(position).getId()).build();
+
             Intent intent = new Intent(getActivity(), DeGroupDetailActivity.class);
             intent.putExtra("INTENT_GROUP", mResultList.get(position));
+
             intent.setData(uri);
             startActivityForResult(intent, RESULTCODE);
+
+
         }
     }
 
@@ -211,7 +224,7 @@ public class DeGroupListFragment extends BaseFragment implements AdapterView.OnI
     }
 
     private void updateAdapter() {
-        Log.e("", "------updateAdapter------");
+        Log.e("","------updateAdapter------");
         if (mDemoGroupListAdapter != null) {
 //            Intent intent = getActivity().getIntent();
 //            Bundle bundle = intent.getExtras();
