@@ -6,20 +6,21 @@ import me.add1.network.AbstractHttpRequest;
 import me.add1.network.ApiCallback;
 
 /**
- * Created by bob on 2015/1/30.
+ * Created by Bob on 2015/1/30.
+ * 联网回调
  */
 public abstract class BaseApiActivity extends BaseActivity implements ApiCallback {
+
     public abstract void onCallApiSuccess(AbstractHttpRequest request, Object obj);
 
     public abstract void onCallApiFailure(AbstractHttpRequest request, BaseException e);
-
 
     @Override
     public void onComplete(final AbstractHttpRequest abstractHttpRequest, final Object o) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                onCallApiSuccess(abstractHttpRequest,o);
+                onCallApiSuccess(abstractHttpRequest, o);
             }
         });
     }
