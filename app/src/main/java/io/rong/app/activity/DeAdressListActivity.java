@@ -37,7 +37,6 @@ public class DeAdressListActivity extends BaseActionBarActivity  {
         switch (item.getItemId()){
             case android.R.id.home:
                 finish();
-
                 break;
         }
         return super.onOptionsItemSelected(item);
