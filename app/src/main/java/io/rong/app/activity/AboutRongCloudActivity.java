@@ -1,8 +1,11 @@
 package io.rong.app.activity;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import io.rong.app.R;
 
@@ -36,6 +39,7 @@ public class AboutRongCloudActivity extends BaseActionBarActivity implements Vie
      */
     @SuppressWarnings("FieldCanBeLocal")
     private RelativeLayout mVersionUpdate;
+    private TextView mCurrentVersion;
 
     @Override
     protected int setContentViewResId() {
@@ -50,18 +54,19 @@ public class AboutRongCloudActivity extends BaseActionBarActivity implements Vie
         mDVDocument = (RelativeLayout) findViewById(R.id.rl_dv_document);
         mRongCloudWeb = (RelativeLayout) findViewById(R.id.rl_rongcloud_web);
         mVersionUpdate = (RelativeLayout) findViewById(R.id.rl_new_version_update);
-
-        mUpdateLog.setOnClickListener(this);
-        mFunctionIntroduce.setOnClickListener(this);
-        mDVDocument.setOnClickListener(this);
-        mRongCloudWeb.setOnClickListener(this);
-        mVersionUpdate.setOnClickListener(this);
+        mCurrentVersion = (TextView) findViewById(R.id.version_new);
 
     }
 
     @Override
     protected void initData() {
-
+        mUpdateLog.setOnClickListener(this);
+        mFunctionIntroduce.setOnClickListener(this);
+        mDVDocument.setOnClickListener(this);
+        mRongCloudWeb.setOnClickListener(this);
+        mVersionUpdate.setOnClickListener(this);
+        String[] versionInfo = getVersionInfo();
+        mCurrentVersion.setText(versionInfo[1]);
     }
 
     @Override
@@ -84,6 +89,23 @@ public class AboutRongCloudActivity extends BaseActionBarActivity implements Vie
 
                 break;
         }
+    }
+
+    private String[] getVersionInfo() {
+        String[] version = new String[2];
+
+        PackageManager packageManager = getPackageManager();
+
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+            version[0] = String.valueOf(packageInfo.versionCode);
+            version[1] = packageInfo.versionName;
+            return version;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return version;
     }
 
 }

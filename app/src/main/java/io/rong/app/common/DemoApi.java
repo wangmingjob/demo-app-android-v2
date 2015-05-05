@@ -29,7 +29,10 @@ import me.add1.network.AuthType;
 import me.add1.network.BaseApi;
 import me.add1.network.NetworkManager;
 
-
+/**
+ * demo api 请求，需要设置cookie，否则会提示 “user not login”
+ * 此处是 Demo 的接口，跟融云 SDK 没有关系，此处仅为示例代码，展示 App 的逻辑
+ */
 public class DemoApi extends BaseApi {
 //    private static String HOST = "http://119.254.110.241:80/";
     private static String   HOST = "http://webim.demo.rong.io/";

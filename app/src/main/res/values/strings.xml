@@ -80,7 +80,7 @@
     <string name="version_number">V2.1.0</string>
     <string name="dv_document">开发者文档</string>
     <string name="rongcloud_web">官方网站</string>
-    <string name="new_version_update">新版更新</string>
+    <string name="new_version_update">当前版本</string>
     <string name="update_profile_success">昵称修改成功</string>
     <string name="update_profile_faiture">昵称修改失败</string>
     <string name="profile_not_null">昵称不能为空</string>
