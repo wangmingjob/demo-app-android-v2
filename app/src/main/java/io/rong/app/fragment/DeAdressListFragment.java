@@ -221,9 +221,9 @@ public class DeAdressListFragment extends Fragment implements DeSwitchGroup.Item
 
         }
         ArrayList<Friend> friendList = new ArrayList<Friend>();
-        friendList.add(new Friend("★001", "新的朋友", "uir"));
-        friendList.add(new Friend("★002", "群聊", "uir"));
-        friendList.add(new Friend("★003", "公共号", "uir"));
+        friendList.add(new Friend("★001", "新的朋友", getResources().getResourceName(R.drawable.de_address_new_friend)));
+        friendList.add(new Friend("★002", "群聊",getResources().getResourceName(R.drawable.de_address_group) ));
+        friendList.add(new Friend("★003", "公众号", getResources().getResourceName(R.drawable.de_address_public)));
         userMap.put("★", friendList);
         for (int i = 0; i < searchLetters.length; i++) {
             String letter = searchLetters[i];

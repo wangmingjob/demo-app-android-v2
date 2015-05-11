@@ -120,19 +120,9 @@ public class DeAddressListAdapter extends DePinnedHeaderAdapter<Friend> implemen
     @Override
     protected void bindHeaderView(View view, int partition, List<Friend> data) {
         Object objTag = view.getTag();
-        if (objTag != null) {
-            if (partition == 0) {
-                Log.e("", "-------partition-==0-" + partition + ",----data----:" + String.valueOf(data.get(0).getSearchKey()));
-                // TODO
-                ((TextView) objTag).setVisibility(View.GONE);
-                ((TextView) objTag).setBackgroundResource(R.color.black_textview);
-//                ((TextView) objTag).setText("Test");
-            } else {
-//                ((TextView) objTag).setText("Test");
-                ((TextView) objTag).setText(String.valueOf(data.get(0).getSearchKey()));
-                Log.e("", "-------partition--" + partition + ",----data----:" + String.valueOf(data.get(0).getSearchKey()));
-            }
 
+        if (objTag != null) {
+            ((TextView) objTag).setText(String.valueOf(data.get(0).getSearchKey()));
         }
     }
 

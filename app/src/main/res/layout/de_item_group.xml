@@ -9,7 +9,7 @@
         android:layout_height="60dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
-        android:src="@drawable/rc_group_default_portrait"
+        android:src="@drawable/de_group_default_portrait"
         android:padding="4dp" />
 
     <LinearLayout

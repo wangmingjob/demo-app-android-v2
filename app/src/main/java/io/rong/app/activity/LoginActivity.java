@@ -24,8 +24,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -119,13 +117,11 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
     private AbstractHttpRequest<User> loginHttpRequest;
     private AbstractHttpRequest<User> getTokenHttpRequest;
     private AbstractHttpRequest<Friends> getUserInfoHttpRequest;
-    private AbstractHttpRequest<Friends> getFriendsHttpRequest;
     private AbstractHttpRequest<Groups> mGetMyGroupsRequest;
 
     private Handler mHandler;
     private List<User> mUserList;
     private List<ApiResult> mResultList;
-    private Gson gson;
     private ImageView mImgBackgroud;
     DeEditTextHolder mEditUserNameEt;
     DeEditTextHolder mEditPassWordEt;
@@ -154,7 +150,6 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
         mRightTitle = (TextView) findViewById(R.id.de_right);
         mUserList = new ArrayList<User>();
         mResultList = new ArrayList<ApiResult>();
-        gson = new Gson();
 
         mSignInBt.setOnClickListener(this);
         mRegister.setOnClickListener(this);
@@ -301,7 +296,7 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
 //                    if (!TextUtils.isEmpty(cookie)) {
 //                        httpGetTokenSuccess(cookie);
 //                    } else {
-                        loginHttpRequest = DemoContext.getInstance().getDemoApi().login(userName, passWord, this);
+                    loginHttpRequest = DemoContext.getInstance().getDemoApi().login(userName, passWord, this);
 //                    }
                 }
 
@@ -312,6 +307,8 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
                 startActivityForResult(intent, REQUEST_CODE_REGISTER);
                 break;
             case R.id.de_login_forgot://忘记密码
+                WinToast.toast(this,"忘记密码");
+                break;
             case R.id.de_right://忘记密码
                 Intent intent1 = new Intent(this, RegisterActivity.class);
                 startActivityForResult(intent1, REQUEST_CODE_REGISTER);
@@ -374,8 +371,8 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
                     edit.commit();
                     RongIM.getInstance().setUserInfoAttachedState(true);
                     RongIM.getInstance().setCurrentUserInfo(new UserInfo(userId, null, null));
-                    RongCloudEvent.getInstance().setOtherListener();
 
+                    RongCloudEvent.getInstance().setOtherListener();
                 }
 
                 @Override
@@ -392,7 +389,7 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
         //发起获取好友列表的http请求  (注：非融云SDK接口，是demo接口)
         if (DemoContext.getInstance() != null) {
 
-//            getUserInfoHttpRequest = DemoContext.getInstance().getDemoApi().getFriends(LoginActivity.this);
+
 //                getFriendsHttpRequest = DemoContext.getInstance().getDemoApi().getNewFriendlist(LoginActivity.this);
             mGetMyGroupsRequest = DemoContext.getInstance().getDemoApi().getMyGroups(LoginActivity.this);
 
@@ -411,7 +408,7 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
     @Override
     public void onCallApiSuccess(AbstractHttpRequest request, Object obj) {
         //登录成功  返回数据
-        if (loginHttpRequest == request) {
+        if (loginHttpRequest.equals(request)) {
 
             if (obj instanceof User) {
 
@@ -442,7 +439,7 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
                     WinToast.toast(LoginActivity.this, "账号错误");
                 }
             }
-        } else if (getTokenHttpRequest == request) {
+        } else if (getTokenHttpRequest.equals(request)) {
             if (obj instanceof User) {
                 final User user = (User) obj;
                 if (user.getCode() == 200) {
@@ -457,7 +454,7 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
                     WinToast.toast(LoginActivity.this, user.getMessage());
                 }
             }
-        } else if (mGetMyGroupsRequest == request) {
+        } else if (mGetMyGroupsRequest.equals(request)) {
             if (obj instanceof Groups) {
                 final Groups groups = (Groups) obj;
 
@@ -490,7 +487,7 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
 //                    WinToast.toast(this, groups.getCode());
                 }
             }
-        } else if (getUserInfoHttpRequest == request) {
+        } else if (getUserInfoHttpRequest.equals(request)) {
             //获取好友列表接口  返回好友数据  (注：非融云SDK接口，是demo接口)
             if (obj instanceof Friends) {
                 final Friends friends = (Friends) obj;
@@ -502,10 +499,10 @@ public class LoginActivity extends BaseApiActivity implements View.OnClickListen
                         friendreslut.add(info);
                     }
                     friendreslut.add(new UserInfo("10000", "新好友消息", Uri.parse("test")));
+                    friendreslut.add(new UserInfo("kefu114", "客服", Uri.parse(getResources().getResourceName(R.drawable.de_service))));
                     if (DemoContext.getInstance() != null)
                         //将数据提供给用户信息提供者
                         DemoContext.getInstance().setUserInfos(friendreslut);
-
                     mHandler.obtainMessage(HANDLER_LOGIN_SUCCESS).sendToTarget();
                 }
             }

@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,7 +33,7 @@ import io.rong.imlib.model.Discussion;
  * Created by Bob on 2015/3/27.
  * 通过intent获得发送过来的数据
  * 1，程序切到后台，点击通知栏进入程序
- * 2，收到 push 消息
+ * 2，收到 push 消息（pish消息可以理解为推送消息）
  */
 public class DemoActivity extends BaseActivity implements Handler.Callback {
 
@@ -74,7 +73,7 @@ public class DemoActivity extends BaseActivity implements Handler.Callback {
         if (intent != null && intent.getData() != null && intent.getData().getScheme().equals("rong") && intent.getData().getQueryParameter("push") != null) {
             //通过intent.getData().getQueryParameter("push") 为true，判断是否是push消息
             if (DemoContext.getInstance() != null && intent.getData().getQueryParameter("push").equals("true")) {
-                if(DemoContext.getInstance()!=null) {
+                if (DemoContext.getInstance() != null) {
                     String token = DemoContext.getInstance().getSharedPreferences().getString("DEMO_TOKEN", "defult");
                     reconnect(token);
                 }
@@ -107,7 +106,6 @@ public class DemoActivity extends BaseActivity implements Handler.Callback {
                         @Override
                         public void run() {
                             mDialog.dismiss();
-                            WinToast.toast(DemoActivity.this, "connect_auto_success");
                             Intent intent = getIntent();
                             if (intent != null) {
                                 enterFragment(intent);
@@ -122,7 +120,6 @@ public class DemoActivity extends BaseActivity implements Handler.Callback {
                         @Override
                         public void run() {
                             mDialog.dismiss();
-                            WinToast.toast(DemoActivity.this, "connect_auto_fail_error");
                         }
                     });
                 }
@@ -132,7 +129,6 @@ public class DemoActivity extends BaseActivity implements Handler.Callback {
                 @Override
                 public void run() {
                     mDialog.dismiss();
-                    WinToast.toast(DemoActivity.this, "connect_auto_fail_e");
                 }
             });
             e.printStackTrace();
@@ -157,6 +153,7 @@ public class DemoActivity extends BaseActivity implements Handler.Callback {
                 if (intent.getData().getPathSegments().get(0).equals("conversation")) {
                     tag = "conversation";
                     if (intent.getData().getLastPathSegment().equals("system")) {
+                        //注释掉的代码为不加输入框的聊天页面（此处作为示例）
 //                        String fragmentName = MessageListFragment.class.getCanonicalName();
 //                        fragment = Fragment.instantiate(this, fragmentName);
                         startActivity(new Intent(DemoActivity.this, DeNewFriendListActivity.class));
@@ -184,7 +181,6 @@ public class DemoActivity extends BaseActivity implements Handler.Callback {
                     ActionBar actionBar = getSupportActionBar();
                     actionBar.hide();//隐藏ActionBar
                 }
-
                 targetId = intent.getData().getQueryParameter("targetId");
                 targetIds = intent.getData().getQueryParameter("targetIds");
                 mDiscussionId = intent.getData().getQueryParameter("discussionId");
@@ -192,8 +188,6 @@ public class DemoActivity extends BaseActivity implements Handler.Callback {
                     mConversationType = Conversation.ConversationType.valueOf(intent.getData().getLastPathSegment().toUpperCase());
                 } else if (targetIds != null)
                     mConversationType = Conversation.ConversationType.valueOf(intent.getData().getLastPathSegment().toUpperCase());
-//                    mConversationType = Conversation.ConversationType.valueOf(intent.getData().getQueryParameter("type").toUpperCase());
-                Log.e(TAG, "----demoacitivity  targetId----:" + targetId + ",targetIds----" + targetIds + ",mConversationType--" + mConversationType + ",mDiscussionId---" + mDiscussionId);
             }
 
             if (fragment != null) {
@@ -202,9 +196,7 @@ public class DemoActivity extends BaseActivity implements Handler.Callback {
                 transaction.addToBackStack(null).commitAllowingStateLoss();
             }
         }
-
     }
-
 
     @Override
     protected void initData() {
@@ -231,13 +223,10 @@ public class DemoActivity extends BaseActivity implements Handler.Callback {
                     });
                 } else if (targetIds != null) {
                     setDiscussionName(targetIds);
-
                 } else {
-
                     getSupportActionBar().setTitle("讨论组");
                 }
             } else if (mConversationType.toString().equals("SYSTEM")) {
-
                 getSupportActionBar().setTitle("系统会话类型");
             } else if (mConversationType.toString().equals("CHATROOM")) {
                 getSupportActionBar().setTitle("聊天室");
@@ -347,13 +336,11 @@ public class DemoActivity extends BaseActivity implements Handler.Callback {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(uri);
                         startActivity(intent);
-                        Log.e(TAG, "00000000000----------targetId---uri.toString()--:" + uri.toString());
                     } else if (!TextUtils.isEmpty(targetIds)) {
 
                         UriFragment fragment = (UriFragment) getSupportFragmentManager().getFragments().get(0);
                         fragment.getUri();
                         targetId = fragment.getUri().getQueryParameter("targetId");
-
 
                         if (!TextUtils.isEmpty(targetId)) {
                             Uri uri = Uri.parse("demo://" + getApplicationInfo().packageName).buildUpon().appendPath("conversationSetting")

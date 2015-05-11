@@ -168,6 +168,8 @@ public class RegisterActivity extends BaseApiActivity implements View.OnClickLis
     protected void initData() {
         mRegisteButton.setOnClickListener(this);
         mRegisteUserAgreement.setOnClickListener(this);
+        mLeftTitle.setOnClickListener(this);
+        mRightTitle.setOnClickListener(this);
         mEditUserNameEt = new DeEditTextHolder(mRegistEmail, mEmailDeleteFramelayout, null);
         mEditNickNameEt = new DeEditTextHolder(mRegistNickName, mNickNameDeleteFramelayout, null);
         mEditPassWordEt = new DeEditTextHolder(mRegistPassword, mPasswordDeleteFramelayout, null);
@@ -212,7 +214,7 @@ public class RegisterActivity extends BaseApiActivity implements View.OnClickLis
                 mLogoImg.setVisibility(View.GONE);
                 mRegistReminder.setVisibility(View.GONE);
                 mIsShowTitle.setVisibility(View.VISIBLE);
-                mLeftTitle.setText(R.string.app_sign_up);
+                mLeftTitle.setText(R.string.app_sign_in);
                 mRightTitle.setText(R.string.app_fogot_password);
                 break;
         }
@@ -250,6 +252,13 @@ public class RegisterActivity extends BaseApiActivity implements View.OnClickLis
                 Message mess = Message.obtain();
                 mess.what = HANDLER_REGIST_HAS_FOCUS;
                 mHandler.sendMessage(mess);
+                break;
+
+            case R.id.de_left://登录
+                startActivity(new Intent(this,LoginActivity.class));
+                break;
+            case R.id.de_right://忘记密码
+                WinToast.toast(this,"忘记密码");
                 break;
         }
     }

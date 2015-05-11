@@ -7,13 +7,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.rong.app.R;
 import io.rong.app.model.Friend;
+import io.rong.imkit.widget.AsyncImageView;
 import me.add1.resource.Resource;
-import io.rong.imkit.widget.AsyncImageView ;
 
 public class DeAddressMultiChoiceAdapter extends DeAddressListAdapter {
 
-    private static final  String TAG =DeAddressMultiChoiceAdapter.class.getSimpleName() ;
+    private static final String TAG = DeAddressMultiChoiceAdapter.class.getSimpleName();
     private ArrayList<Friend> mFriends;
 
 
@@ -21,6 +22,7 @@ public class DeAddressMultiChoiceAdapter extends DeAddressListAdapter {
         super(context, friends);
         this.mFriends = (ArrayList<Friend>) friends;
     }
+
     @Override
     protected void bindView(View v, int partition, List<Friend> data, int position) {
         super.bindView(v, partition, data, position);
@@ -33,9 +35,16 @@ public class DeAddressMultiChoiceAdapter extends DeAddressListAdapter {
         name.setText(friend.getNickname());
 
         Resource res = new Resource(friend.getPortrait());
-
-        photo.setDefaultDrawable(mContext.getResources().getDrawable(io.rong.imkit.R.drawable.rc_default_portrait));
-                photo.setResource(res);
+        if(friend.getUserId().equals("★001")){
+            photo.setDefaultDrawable(mContext.getResources().getDrawable(R.drawable.de_address_new_friend));
+        }else if(friend.getUserId().equals("★002")){
+            photo.setDefaultDrawable(mContext.getResources().getDrawable(R.drawable.de_address_group));
+        }else if(friend.getUserId().equals("★003")){
+            photo.setDefaultDrawable(mContext.getResources().getDrawable(R.drawable.de_address_public));
+        }else{
+            photo.setDefaultDrawable(mContext.getResources().getDrawable(R.drawable.de_default_portrait));
+        }
+        photo.setResource(res);
 
         String userId = friend.getUserId();
         holder.userId = userId;

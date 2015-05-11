@@ -226,7 +226,7 @@ public class DeNewFriendListActivity extends BaseApiActivity implements Handler.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.de_conversation_menu, menu);
+        inflater.inflate(R.menu.de_add_friend_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
